@@ -22,13 +22,16 @@ public:
 	void Controls(float dt);
 	void CollisionCheck();
 
+	float pHealth;
 	bool noise;
 private:
+
+
 	sf::RenderWindow* window;
 	Input* input;
 
 	float movSpeed;
-	float pHealth;
+	
 	sf::Vector2f playerPos;
 	sf::Texture playerTex;
 	sf::Window* window_;

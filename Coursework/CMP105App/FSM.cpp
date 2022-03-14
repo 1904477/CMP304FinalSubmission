@@ -65,6 +65,10 @@ void FSM::UpdateChecks()
 	{
 		current_state = Attack;
 	}
+	if ((distanceToPlayer.x < 50 && distanceToPlayer.y < 50) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	{
+		player->pHealth -= 0.01;
+	}
 	if (current_state != Attack)
 	{
 		if ((distanceToPlayer.x < 400 && distanceToPlayer.y < 400) && (distanceToPlayer.x > 200 || distanceToPlayer.y > 200) && player->noise == true)
