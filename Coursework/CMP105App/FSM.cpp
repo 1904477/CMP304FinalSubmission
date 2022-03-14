@@ -61,11 +61,11 @@ void FSM::UpdateChecks()
 		distanceToPlayer.y *= -1;
 
 
-	if ((distanceToPlayer.x < 200 && distanceToPlayer.y < 200)&& distanceToPlayer.x > 30 && distanceToPlayer.y > 30) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	if ((distanceToPlayer.x < 200 && distanceToPlayer.y < 200)&& distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
 	{
 		current_state = Attack;
 	}
-	if ((distanceToPlayer.x < 50 && distanceToPlayer.y < 50) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	if ((distanceToPlayer.x < 70 && distanceToPlayer.y < 70) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
 	{
 		player->pHealth -= 0.01;
 	}
@@ -147,7 +147,7 @@ void FSM::SuspiciousFunc(float dt)
 void FSM::AttackFunc(float dt)
 {
 	std::cout << "Guard is attacking\n";
-	if (distanceToPlayer.x > 30 && distanceToPlayer.y > 30)
+	if (distanceToPlayer.x > 10 && distanceToPlayer.y > 10)
 	{
 		guardFSM->speed = 150;
 	}

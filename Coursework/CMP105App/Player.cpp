@@ -124,11 +124,6 @@ void Player::CollisionCheck()
 			}
 		}
 	}
-	if (Collision::checkBoundingBox(this, guardFSM))
-	{
-		std::cout << "guard hitting player\n";
-		pHealth -= 0.5;
-	}
 	if (pHealth <= 0)
 		pHealth = 0;
 

@@ -1,1 +1,33 @@
-﻿  CMP105App.vcxproj -> C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\x64\Debug\CMP105App.exe
+﻿  FSM.cpp
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(8,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(20,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(20,46): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(21,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(21,46): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(70,26): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\FSM.cpp(245,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+  CMP105App.vcxproj -> C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\x64\Debug\CMP105App.exe
