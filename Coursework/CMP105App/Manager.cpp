@@ -30,8 +30,10 @@ void Manager::Update(float dt)
 	if (guardBT.isAlive() == true)
 	{
 		guardBT.Update(dt, player.getPosition());
-		fsm.Update(dt);
+		btState.Update(dt);
 	}
+
+
 }
 
 void Manager::Render()

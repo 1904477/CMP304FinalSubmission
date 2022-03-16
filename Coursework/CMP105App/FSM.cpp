@@ -91,8 +91,6 @@ void FSM::StillFunc()
 		std::cout << randomNumber;
 		if (randomNumber > 50)
 			current_state = Wander;
-		else
-			current_state = Talk;
 		clock.restart();
 	}
 }
@@ -138,7 +136,12 @@ void FSM::SuspiciousFunc(float dt)
 	if (time.asSeconds() >= 6)
 	{
 		clock.restart();
-		current_state = Wander;
+		int randomNumber = rand() % 101;
+		std::cout << randomNumber;
+		if (randomNumber > 50)
+			current_state = Still;
+		else
+			current_state = Wander;
 	}
 
 

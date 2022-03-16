@@ -1,10 +1,21 @@
 #include "BTState.h"
 BTState::BTState(sf::RenderWindow* hwnd,GuardBT* grdBt, Player* pl)
+	:
+	root("rootNode"),
+	branch1("branch1"),
+	guardBranch("Wander"),
+	StandLeaf("Standing"),
+	WanderLeaf("Patrolling"),
+	SuspiciousLeaf("Disturbance"),
+	AttackLeaf("Explore"),
+
+	StandTimer("timerInsert",3),
+	WanderTimer("timerInsert",5),
+	SuspiciousTimer("timerInsert",6)
 {
 	window = hwnd;
 	player = pl;
 	guardBt = grdBt;
-
 }
 
 BTState::~BTState()
@@ -13,34 +24,170 @@ BTState::~BTState()
 
 void BTState::Init()
 {
+	wanderStates = p1;
+	wanderP1 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 1.2);
+	wanderP2 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 0.4);
+	wanderToOrigin = guardBt->getPosition();
+
+
+	//StandLeaf.setRunFunction(leafStandFunction);
+//	WanderLeaf.setRunFunction(leafWanderFunction);
+
+
+	root.addChildNode(&branch1);
+	branch1.addChildNode(&guardBranch);
+
+	guardBranch.addChildNode(&StandTimer);
+	guardBranch.addChildNode(&WanderTimer);
+	StandTimer.addChildNode(&StandLeaf);
+	WanderTimer.addChildNode(&WanderLeaf);
 
 }
 
 void BTState::Update(float dt)
 {
+	deltaTime = dt;
+	distanceToPlayer = player->getPosition() - guardBt->getPosition();
+	directionTowardsPlayer = Vector::normalise(distanceToPlayer);
+
+	if (distanceToPlayer.x < 0)
+		distanceToPlayer.x *= -1;
+	if (distanceToPlayer.y < 0)
+		distanceToPlayer.y *= -1;
+
+
+	BT::NodeStatus result = root.tick();
+	if (result == BT::NodeStatus::NODE_SUCCESS)
+	{
+		root.reset();
+	}
+	else if (result == BT::NodeStatus::NODE_FAILURE)
+	{
+		window->close();
+	}
 }
 
-BT::NodeStatus BTState::leafAlarmFunction(BT::TreeNode* owner)
+void BTState::guardRotation(sf::Vector2f pointPos)
 {
-	return BT::NodeStatus();
+	sf::Vector2f curPos = guardBt->getPosition();
+	sf::Vector2f pPosition = pointPos;
+	// now we have both the sprite position and the cursor
+	// position lets do the calculation so our sprite will
+	// face the position of the mouse
+	const float PI = 3.14159265;
+	float dx = curPos.x - pPosition.x;
+	float dy = curPos.y - pPosition.y;
+	float rotation = (atan2(dy, dx)) * 180 / PI;
+	guardBt->setRotation(rotation + 180);
 }
+
+void BTState::moveToOrigin()
+{
+	guardBt->speed = 80;
+	sf::Vector2f distanceFromGuardToOrig(wanderToOrigin - guardBt->getPosition());
+	sf::Vector2f directionToOrig = Vector::normalise(distanceFromGuardToOrig);
+	guardBt->setVelocity(directionToOrig * guardBt->speed * deltaTime);
+	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
+
+	if (distanceFromGuardToOrig.x < 0)
+		distanceFromGuardToOrig.x *= -1;
+	if (distanceFromGuardToOrig.y < 0)
+		distanceFromGuardToOrig.y *= -1;
+
+	if (distanceFromGuardToOrig.x < 50 && distanceFromGuardToOrig.y < 50)
+	{
+		std::cout << "guard reached first wander point\n";
+		wanderStates = p1;
+	}
+	guardRotation(wanderToOrigin);
+}
+
+void BTState::moveToPoint1()
+{
+	guardBt->speed = 80;
+	sf::Vector2f distanceFromGuardToPoint1(wanderP1 - guardBt->getPosition());
+	sf::Vector2f directionToPoint1 = Vector::normalise(distanceFromGuardToPoint1);
+	guardBt->setVelocity(directionToPoint1 * guardBt->speed * deltaTime);
+	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
+
+	if (distanceFromGuardToPoint1.x < 0)
+		distanceFromGuardToPoint1.x *= -1;
+	if (distanceFromGuardToPoint1.y < 0)
+		distanceFromGuardToPoint1.y *= -1;
+	if (distanceFromGuardToPoint1.x < 50 && distanceFromGuardToPoint1.y < 50)
+		
+	guardRotation(wanderP1);
+}
+
+void BTState::moveToPoint2()
+{
+	guardBt->speed = 80;
+	sf::Vector2f distanceFromGuardToPoint2(wanderP2 - guardBt->getPosition());
+	sf::Vector2f directionToPoint2 = Vector::normalise(distanceFromGuardToPoint2);
+	guardBt->setVelocity(directionToPoint2 * guardBt->speed * deltaTime);
+	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
+
+	if (distanceFromGuardToPoint2.x < 0)
+		distanceFromGuardToPoint2.x *= -1;
+	if (distanceFromGuardToPoint2.y < 0)
+		distanceFromGuardToPoint2.y *= -1;
+
+	if (distanceFromGuardToPoint2.x < 50 && distanceFromGuardToPoint2.y < 50)
+	{
+		std::cout << "guard reached first wander point\n";
+		wanderStates = orig;
+	}
+
+	guardRotation(wanderP2);
+}
+
+BT::NodeStatus BTState::leafAttackFunction(BT::TreeNode* owner)
+{
+
+	std::cout << "Guard is attacking\n";
+	if (distanceToPlayer.x > 10 && distanceToPlayer.y > 10)
+		guardBt->speed = 150;
+	else
+		guardBt->speed = 0;
+
+	guardBt->setVelocity(directionTowardsPlayer * guardBt->speed * deltaTime);
+	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
+
+	guardRotation(player->getPosition());
+
+
+	return BT::NodeStatus::NODE_RUNNING;
+}
+
 
 BT::NodeStatus BTState::leafStandFunction(BT::TreeNode* owner)
 {
-	return BT::NodeStatus();
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	{
+		return BT::NodeStatus::NODE_FAILURE;
+	}
+
+	return BT::NodeStatus::NODE_RUNNING;
 }
 
-BT::NodeStatus BTState::leafPatrolFunction(BT::TreeNode* owner)
+BT::NodeStatus BTState::leafWanderFunction(BT::TreeNode* owner)
 {
-	return BT::NodeStatus();
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	{
+		return BT::NodeStatus::NODE_FAILURE;
+	}
+
+	return BT::NodeStatus::NODE_RUNNING;
 }
 
-BT::NodeStatus BTState::leafDisturbFunction(BT::TreeNode* owner)
+BT::NodeStatus BTState::leafSuspiciousFunction(BT::TreeNode* owner)
 {
-	return BT::NodeStatus();
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	{
+		return BT::NodeStatus::NODE_FAILURE;
+	}
+
+	return BT::NodeStatus::NODE_RUNNING;
 }
 
-BT::NodeStatus BTState::leafExploreFunction(BT::TreeNode* owner)
-{
-	return BT::NodeStatus();
-}
+

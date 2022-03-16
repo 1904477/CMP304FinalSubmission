@@ -19,17 +19,42 @@ public:
 
 	void Init();
 	void Update(float dt);
+	void guardRotation(sf::Vector2f pointPos);
+	void moveToPoint1();
+	void moveToPoint2();
+	void moveToOrigin();
+	enum wanStates { p1, p2, orig };
 
-	BT::NodeStatus leafAlarmFunction(BT::TreeNode* owner);
+	float deltaTime;
+
+
+	BT::NodeStatus leafAttackFunction(BT::TreeNode* owner);
 	BT::NodeStatus leafStandFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafPatrolFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafDisturbFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafExploreFunction(BT::TreeNode* owner);
+	BT::NodeStatus leafWanderFunction(BT::TreeNode* owner);
+	BT::NodeStatus leafSuspiciousFunction(BT::TreeNode* owner);
 
 	sf::RenderWindow* window; 
 	GuardBT* guardBt;
 	Player* player;
 
+	BT::FallbackSelector root;
+	BT::FallbackSelector branch1;
+	BT::SequenceSelector guardBranch;
 
+	BT::LeafNode StandLeaf;
+	BT::LeafNode WanderLeaf;
+	BT::LeafNode SuspiciousLeaf;
+	BT::LeafNode AttackLeaf;
+
+	BT::Decorator StandTimer;
+	BT::Decorator WanderTimer;
+	BT::Decorator SuspiciousTimer;
+
+
+	sf::Vector2f directionTowardsPlayer;
+	sf::Vector2f distanceToPlayer;
+
+	sf::Vector2f wanderP1, wanderP2, wanderToOrigin;
+	wanStates wanderStates;
 };
 
