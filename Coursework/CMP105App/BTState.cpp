@@ -24,6 +24,7 @@ BTState::~BTState()
 
 void BTState::Init()
 {
+	inAttack = false;
 	wanderStates = p1;
 	wanderP1 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 1.2);
 	wanderP2 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 0.4);
@@ -55,6 +56,22 @@ void BTState::Update(float dt)
 	if (distanceToPlayer.y < 0)
 		distanceToPlayer.y *= -1;
 
+	if ((distanceToPlayer.x < 200 && distanceToPlayer.y < 200) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	{
+		BT::Blackboard::getInstance()->addNewValue("Noise", 1);
+		BT::Blackboard::getInstance()->addNewValue("Attack", 1);
+	}
+	if ((distanceToPlayer.x < 70 && distanceToPlayer.y < 70) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	{
+		player->pHealth -= 0.01;
+	}
+	if (inAttack==false)
+	{
+		if ((distanceToPlayer.x < 400 && distanceToPlayer.y < 400) && (distanceToPlayer.x > 200 || distanceToPlayer.y > 200) && player->noise == true)
+		{
+			BT::Blackboard::getInstance()->addNewValue("Noise", 1);
+		}
+	}
 
 	BT::NodeStatus result = root.tick();
 	if (result == BT::NodeStatus::NODE_SUCCESS)
@@ -143,6 +160,7 @@ void BTState::moveToPoint2()
 
 BT::NodeStatus BTState::leafAttackFunction(BT::TreeNode* owner)
 {
+	inAttack = true;
 
 	std::cout << "Guard is attacking\n";
 	if (distanceToPlayer.x > 10 && distanceToPlayer.y > 10)
@@ -155,37 +173,66 @@ BT::NodeStatus BTState::leafAttackFunction(BT::TreeNode* owner)
 
 	guardRotation(player->getPosition());
 
-
-	return BT::NodeStatus::NODE_RUNNING;
+	if (player->pHealth == 0)		//Last function, if player is dead end program
+	{
+		return BT::NodeStatus::NODE_FAILURE;
+	}
+	else
+		return BT::NodeStatus::NODE_RUNNING;
 }
 
 
 BT::NodeStatus BTState::leafStandFunction(BT::TreeNode* owner)
 {
-	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("Noise"))
 	{
 		return BT::NodeStatus::NODE_FAILURE;
 	}
+
+
+	std::cout << "Guard stopped\n";
+	guardBt->speed = 0;
+
 
 	return BT::NodeStatus::NODE_RUNNING;
 }
 
 BT::NodeStatus BTState::leafWanderFunction(BT::TreeNode* owner)
 {
-	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("Noise"))
 	{
 		return BT::NodeStatus::NODE_FAILURE;
 	}
+
+	std::cout << "Guard is wandering\n";
+	switch (wanderStates)
+	{
+	case p1:
+		moveToPoint1();
+		break;
+	case p2:
+		moveToPoint2();
+		break;
+	case orig:
+		moveToOrigin();
+		break;
+	}
+	std::cout << "Guard stopped\n";
+	guardBt->speed = 0;
 
 	return BT::NodeStatus::NODE_RUNNING;
 }
 
 BT::NodeStatus BTState::leafSuspiciousFunction(BT::TreeNode* owner)
 {
-	if (BT::Blackboard::getInstance()->getAndDeleteValue("disturbance"))
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("Noise"))
 	{
 		return BT::NodeStatus::NODE_FAILURE;
 	}
+	guardBt->speed = 40;
+	guardBt->setVelocity(directionTowardsPlayer * guardBt->speed * deltaTime);
+	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
+	guardRotation(player->getPosition());
 
 	return BT::NodeStatus::NODE_RUNNING;
 }

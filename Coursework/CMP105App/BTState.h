@@ -56,5 +56,9 @@ public:
 
 	sf::Vector2f wanderP1, wanderP2, wanderToOrigin;
 	wanStates wanderStates;
+
+	sf::Clock clock;
+
+	bool inAttack;
 };
 
