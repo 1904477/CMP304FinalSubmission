@@ -8,10 +8,9 @@ BTState::BTState(sf::RenderWindow* hwnd,GuardBT* grdBt, Player* pl)
 	WanderLeaf("Patrolling"),
 	SuspiciousLeaf("Disturbance"),
 	AttackLeaf("Explore"),
-
-	StandTimer("timerInsert",3),
-	WanderTimer("timerInsert",5),
-	SuspiciousTimer("timerInsert",6)
+	StandTimer("timerInsert",100),
+	SuspiciousTimer("timerInsert",100),
+	WanderTimer("timerInsert",100)
 {
 	window = hwnd;
 	player = pl;
@@ -26,22 +25,23 @@ void BTState::Init()
 {
 	inAttack = false;
 	wanderStates = p1;
-	wanderP1 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 1.2);
-	wanderP2 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 0.4);
+	wanderP1 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 2);
+	wanderP2 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 1.2);
 	wanderToOrigin = guardBt->getPosition();
-
-
-	//StandLeaf.setRunFunction(leafStandFunction);
-//	WanderLeaf.setRunFunction(leafWanderFunction);
-
+	StandLeaf.setRunFunction(std::bind(&BTState::leafStandFunction, this, std::placeholders::_1));
+	WanderLeaf.setRunFunction(std::bind(&BTState::leafWanderFunction, this, std::placeholders::_1));
+	SuspiciousLeaf.setRunFunction(std::bind(&BTState::leafSuspiciousFunction, this, std::placeholders::_1));
+	AttackLeaf.setRunFunction(std::bind(&BTState::leafAttackFunction, this, std::placeholders::_1));
 
 	root.addChildNode(&branch1);
 	branch1.addChildNode(&guardBranch);
 
 	guardBranch.addChildNode(&StandTimer);
 	guardBranch.addChildNode(&WanderTimer);
-	StandTimer.addChildNode(&StandLeaf);
+
 	WanderTimer.addChildNode(&WanderLeaf);
+	StandTimer.addChildNode(&StandLeaf);
+
 
 }
 
@@ -80,11 +80,11 @@ void BTState::Update(float dt)
 	}
 	else if (result == BT::NodeStatus::NODE_FAILURE)
 	{
-		window->close();
+		return;
 	}
 }
 
-void BTState::guardRotation(sf::Vector2f pointPos)
+void BTState::guardRotation(sf::Vector2f pointPos)			//Rotation based on direction
 {
 	sf::Vector2f curPos = guardBt->getPosition();
 	sf::Vector2f pPosition = pointPos;
@@ -98,7 +98,7 @@ void BTState::guardRotation(sf::Vector2f pointPos)
 	guardBt->setRotation(rotation + 180);
 }
 
-void BTState::moveToOrigin()
+void BTState::moveToOrigin()		//Guard gets back to origin position
 {
 	guardBt->speed = 80;
 	sf::Vector2f distanceFromGuardToOrig(wanderToOrigin - guardBt->getPosition());
@@ -119,24 +119,25 @@ void BTState::moveToOrigin()
 	guardRotation(wanderToOrigin);
 }
 
-void BTState::moveToPoint1()
+void BTState::moveToPoint1()			//Guard moves to first point
 {
 	guardBt->speed = 80;
 	sf::Vector2f distanceFromGuardToPoint1(wanderP1 - guardBt->getPosition());
 	sf::Vector2f directionToPoint1 = Vector::normalise(distanceFromGuardToPoint1);
 	guardBt->setVelocity(directionToPoint1 * guardBt->speed * deltaTime);
 	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
-
 	if (distanceFromGuardToPoint1.x < 0)
 		distanceFromGuardToPoint1.x *= -1;
 	if (distanceFromGuardToPoint1.y < 0)
 		distanceFromGuardToPoint1.y *= -1;
+
 	if (distanceFromGuardToPoint1.x < 50 && distanceFromGuardToPoint1.y < 50)
-		
+		wanderStates = p2;
+
 	guardRotation(wanderP1);
 }
 
-void BTState::moveToPoint2()
+void BTState::moveToPoint2()		//Guard moves to second point
 {
 	guardBt->speed = 80;
 	sf::Vector2f distanceFromGuardToPoint2(wanderP2 - guardBt->getPosition());
@@ -160,6 +161,7 @@ void BTState::moveToPoint2()
 
 BT::NodeStatus BTState::leafAttackFunction(BT::TreeNode* owner)
 {
+
 	inAttack = true;
 
 	std::cout << "Guard is attacking\n";
@@ -188,12 +190,7 @@ BT::NodeStatus BTState::leafStandFunction(BT::TreeNode* owner)
 	{
 		return BT::NodeStatus::NODE_FAILURE;
 	}
-
-
-	std::cout << "Guard stopped\n";
 	guardBt->speed = 0;
-
-
 	return BT::NodeStatus::NODE_RUNNING;
 }
 
@@ -217,7 +214,9 @@ BT::NodeStatus BTState::leafWanderFunction(BT::TreeNode* owner)
 		moveToOrigin();
 		break;
 	}
-	std::cout << "Guard stopped\n";
+
+	sf::Time time1 = clock.getElapsedTime();
+	//std::cout << "Guard stopped\n";
 	guardBt->speed = 0;
 
 	return BT::NodeStatus::NODE_RUNNING;
@@ -229,11 +228,11 @@ BT::NodeStatus BTState::leafSuspiciousFunction(BT::TreeNode* owner)
 	{
 		return BT::NodeStatus::NODE_FAILURE;
 	}
+
 	guardBt->speed = 40;
 	guardBt->setVelocity(directionTowardsPlayer * guardBt->speed * deltaTime);
 	guardBt->setPosition(sf::Vector2f(guardBt->getPosition().x + guardBt->getVelocity().x, guardBt->getPosition().y + guardBt->getVelocity().y));
 	guardRotation(player->getPosition());
-
 	return BT::NodeStatus::NODE_RUNNING;
 }
 

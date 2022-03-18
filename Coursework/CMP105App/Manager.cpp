@@ -17,6 +17,7 @@ void Manager::Init()
 	guardFSM.Init();
 	guardBT.Init();
 	fsm.Init();
+	btState.Init();
 }
 
 void Manager::Update(float dt)

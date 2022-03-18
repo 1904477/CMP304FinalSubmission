@@ -83,7 +83,6 @@ void FSM::UpdateChecks()
 void FSM::StillFunc()
 {
 	sf::Time time = clock.getElapsedTime();
-	std::cout << "Guard stopped\n";
 	guardFSM->speed = 0;
 	if (time.asSeconds() >= 3)
 	{
@@ -97,7 +96,6 @@ void FSM::StillFunc()
 
 void FSM::WanderFunc(float dt)
 {
-	std::cout << "Guard is wandering\n";
 	sf::Time time = clock.getElapsedTime();
 	if (time.asSeconds() >= 4)
 	{
@@ -127,7 +125,6 @@ void FSM::SuspiciousFunc(float dt)
 {
 	sf::Time time;
 	time = clock.getElapsedTime();
-	std::cout << "Guard is suspicious\n";
 
 	guardFSM->speed = 40;
 	guardFSM->setVelocity(directionTowardsPlayer * guardFSM->speed * dt);
@@ -149,7 +146,6 @@ void FSM::SuspiciousFunc(float dt)
 
 void FSM::AttackFunc(float dt)
 {
-	std::cout << "Guard is attacking\n";
 	if (distanceToPlayer.x > 10 && distanceToPlayer.y > 10)
 	{
 		guardFSM->speed = 150;
@@ -169,7 +165,6 @@ void FSM::DieFunc()
 
 void FSM::TalkFunc()
 {
-	std::cout << "Guard is talking to the other guard. \n";
 	guardFSM->speed = 0;
 	sf::Time time = clock.getElapsedTime();
 	if (time.asSeconds() >= 4)

@@ -1,6 +1,10 @@
 ﻿  BTState.cpp
-C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\BTState.cpp(28,73): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\BTState.cpp(28,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
+          [
+              T=unsigned int
+          ]
+          and
           [
               T=float
           ]
@@ -19,11 +23,6 @@ C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission
           [
               T=float
           ]
-C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\BTState.cpp(77,29): warning C4305: 'initializing': truncation from 'double' to 'float'
-BTState.obj : error LNK2019: unresolved external symbol "public: __cdecl BT::LeafNode::LeafNode(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0LeafNode@BT@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "public: __cdecl BTState::BTState(class sf::RenderWindow *,class GuardBT *,class Player *)" (??0BTState@@QEAA@PEAVRenderWindow@sf@@PEAVGuardBT@@PEAVPlayer@@@Z)
-BTState.obj : error LNK2019: unresolved external symbol "public: __cdecl BT::FallbackSelector::FallbackSelector(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0FallbackSelector@BT@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "public: __cdecl BTState::BTState(class sf::RenderWindow *,class GuardBT *,class Player *)" (??0BTState@@QEAA@PEAVRenderWindow@sf@@PEAVGuardBT@@PEAVPlayer@@@Z)
-BTState.obj : error LNK2019: unresolved external symbol "public: __cdecl BT::SequenceSelector::SequenceSelector(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0SequenceSelector@BT@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "public: __cdecl BTState::BTState(class sf::RenderWindow *,class GuardBT *,class Player *)" (??0BTState@@QEAA@PEAVRenderWindow@sf@@PEAVGuardBT@@PEAVPlayer@@@Z)
-BTState.obj : error LNK2019: unresolved external symbol "public: __cdecl BT::Decorator::Decorator(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,unsigned int)" (??0Decorator@BT@@QEAA@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z) referenced in function "public: __cdecl BTState::BTState(class sf::RenderWindow *,class GuardBT *,class Player *)" (??0BTState@@QEAA@PEAVRenderWindow@sf@@PEAVGuardBT@@PEAVPlayer@@@Z)
-BTState.obj : error LNK2019: unresolved external symbol "public: static class BT::Blackboard * __cdecl BT::Blackboard::getInstance(void)" (?getInstance@Blackboard@BT@@SAPEAV12@XZ) referenced in function "public: enum BT::NodeStatus __cdecl BTState::leafStandFunction(class BT::TreeNode *)" (?leafStandFunction@BTState@@QEAA?AW4NodeStatus@BT@@PEAVTreeNode@3@@Z)
-BTState.obj : error LNK2019: unresolved external symbol "public: int __cdecl BT::Blackboard::getAndDeleteValue(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?getAndDeleteValue@Blackboard@BT@@QEAAHV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function "public: enum BT::NodeStatus __cdecl BTState::leafStandFunction(class BT::TreeNode *)" (?leafStandFunction@BTState@@QEAA?AW4NodeStatus@BT@@PEAVTreeNode@3@@Z)
-C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\x64\Debug\CMP105App.exe : fatal error LNK1120: 6 unresolved externals
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\BTState.cpp(66,26): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\CMP105App\BTState.cpp(94,29): warning C4305: 'initializing': truncation from 'double' to 'float'
+  CMP105App.vcxproj -> C:\Users\aless\OneDrive\Desktop\Uni Work\Third Year\CMP304\CMP304FinalSubmission\Coursework\x64\Debug\CMP105App.exe
