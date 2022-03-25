@@ -1,14 +1,14 @@
 #pragma once
 #include "SFML\Graphics.hpp"
 #include "Framework\GameObject.h"
-class Background : public GameObject
+class Background : public GameObject		//Class for background
 {
 public:
-	Background(sf::RenderWindow*hwnd);
-	~Background();
+	Background(sf::RenderWindow*hwnd);		//Constructor
+	~Background();							//Destructor
 
-	void Init();
-	void Render();
+		void Init();			//Initializer
+		void Render();			//Render Background
 	
 	sf::RenderWindow* window;
 	sf::Texture text;

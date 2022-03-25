@@ -14,48 +14,50 @@
 class BTState
 {
 public:
-	BTState(sf::RenderWindow*hwnd , GuardBT* grdBt, Player* pl);
-	~BTState();
+	BTState(sf::RenderWindow*hwnd , GuardBT* grdBt, Player* pl);		//Constructor
+	~BTState();															//Destructor
 
-	void Init();
-	void Update(float dt);
-	void guardRotation(sf::Vector2f pointPos);
-	void moveToPoint1();
-	void moveToPoint2();
-	void moveToOrigin();
-	enum wanStates { p1, p2, orig };
+	void Init();		//Initializer
+	void Update(float dt);		//Update function
+	void guardRotation(sf::Vector2f pointPos);		//Guard rotates
+	void moveToPoint1();			//Guard moves to first point function
+	void moveToPoint2();			//Guard moves to second point function
+	void moveToOrigin();			//Guard moves to original point function
+	enum wanStates { p1, p2, orig };		//States for wandering
 
-	float deltaTime;
+	float deltaTime;		//Deltatime variable
 
 
-	BT::NodeStatus leafAttackFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafStandFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafWanderFunction(BT::TreeNode* owner);
-	BT::NodeStatus leafSuspiciousFunction(BT::TreeNode* owner);
+	BT::NodeStatus leafAttackFunction(BT::TreeNode* owner);			//Attack function
+	BT::NodeStatus leafStandFunction(BT::TreeNode* owner);			//Stand function
+	BT::NodeStatus leafWanderFunction(BT::TreeNode* owner);			//Wander function
+	BT::NodeStatus leafSuspiciousFunction(BT::TreeNode* owner);		//Suspicious function
+	BT::NodeStatus Die(BT::TreeNode* owner);						//Die function
 
 	sf::RenderWindow* window; 
 	GuardBT* guardBt;
 	Player* player;
 
-	BT::FallbackSelector root;
-	BT::FallbackSelector branch1;
-	BT::SequenceSelector guardBranch;
+	BT::FallbackSelector root;		//Root
+	BT::FallbackSelector branch1;	//First branch
+	BT::SequenceSelector guardBranch;		//Guard branch(wander and still
 
+	BT::LeafNode DieLeaf;			//Leaves 
 	BT::LeafNode StandLeaf;
 	BT::LeafNode WanderLeaf;
 	BT::LeafNode SuspiciousLeaf;
 	BT::LeafNode AttackLeaf;
 
-	BT::Decorator StandTimer;
+	BT::Decorator StandTimer;		//Timer to alternate different functions
 	BT::Decorator WanderTimer;
 	BT::Decorator SuspiciousTimer;
 
 
-	sf::Vector2f directionTowardsPlayer;
+	sf::Vector2f directionTowardsPlayer;			//Vectors for positions
 	sf::Vector2f distanceToPlayer;
 
 	sf::Vector2f wanderP1, wanderP2, wanderToOrigin;
-	wanStates wanderStates;
+	wanStates wanderStates;		//Current wander state
 
 	sf::Clock clock;
 

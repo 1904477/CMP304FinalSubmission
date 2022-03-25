@@ -8,14 +8,14 @@
 #include <iostream>
 #include "Manager.h"
 
-class Level{
+class Level{		//Main level class
 public:
-	Level(sf::RenderWindow* hwnd, Input* in);
-	~Level();
+	Level(sf::RenderWindow* hwnd, Input* in);		//Constructor
+	~Level();			//destructor
 
-	void handleInput(float dt);
-	void update(float dt);
-	void render();
+	void handleInput(float dt);			//Handle input function
+	void update(float dt);				//Update function	
+	void render();		//render function
 
 private:
 	// Default functions for rendering to the screen.

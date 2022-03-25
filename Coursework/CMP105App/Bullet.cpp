@@ -15,5 +15,5 @@ void Bullet::Init()
 void Bullet::Update(float dt)
 {
 
-	move(getVelocity() * dt);
+	move(getVelocity() * dt);		//Bullet moves 
 }

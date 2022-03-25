@@ -172,6 +172,7 @@
     <ClCompile Include="Framework\TileMap.cpp" />
     <ClCompile Include="Framework\Vector.cpp" />
     <ClCompile Include="FSM.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="GraphicsTools.cpp" />
     <ClCompile Include="GuardFSM.cpp" />
     <ClCompile Include="GuardBT.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Framework\TileMap.h" />
     <ClInclude Include="Framework\Vector.h" />
     <ClInclude Include="FSM.h" />
+    <ClInclude Include="Goal.h" />
     <ClInclude Include="GraphicsTools.h" />
     <ClInclude Include="GuardFSM.h" />
     <ClInclude Include="GuardBT.h" />

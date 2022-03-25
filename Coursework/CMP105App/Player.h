@@ -7,22 +7,23 @@
 #include "BulletManager.h"
 #include "Framework\Vector.h"
 #include "GuardFSM.h"
+#include "GuardBT.h"
 #include "Framework/Collision.h"
 #include "GraphicsTools.h"
-class Player : public GameObject
+class Player : public GameObject		//Player class
 {
 public:
-	Player(sf::RenderWindow* hwnd, Input* in, GuardFSM* grdFSM);
+	Player(sf::RenderWindow* hwnd, Input* in, GuardFSM* grdFSM, GuardBT* grtBt);		//Constructor, communicates with manager class to get pointer to the different guard classes
 	~Player();
 
-	void Init();
-	void Update(float dt);
-	void Render();
-	void HandleInput(float dt);
-	void Controls(float dt);
-	void CollisionCheck();
+	void Init();		//Init function
+	void Update(float dt);		//Update function
+	void Render();		//Render function
+	void HandleInput(float dt);		//Handle input function
+	void Controls(float dt);		//Controls, called in handle input
+	void CollisionCheck();		//Collision function
 
-	float pHealth;
+	float pHealth;		//Variables for player class
 	bool noise;
 private:
 
@@ -36,6 +37,7 @@ private:
 	sf::Texture playerTex;
 	sf::Window* window_;
 	GuardFSM* guardFSM;
+	GuardBT* guardBT;
 
 	BulletManager bullet;
 	sf::Vector2f bulletDir;
