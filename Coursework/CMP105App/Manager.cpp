@@ -26,6 +26,7 @@ void Manager::Init()		//Initialize the different objects
 	fsm.Init();
 	btState.Init();
 	goal.Init();
+	numOfTicks = 0;
 }
 
 void Manager::Update(float dt)
@@ -36,12 +37,39 @@ void Manager::Update(float dt)
 		if (guardFSM.isAlive() == true)		//Update guard and its fsm only if guard is alive
 		{
 			guardFSM.Update(dt, player.getPosition());
-			fsm.Update(dt);
+			
+		//	if (runTest == true)
+		//	{
+			//	start = the_clock::now();			// Start timing 
+			//	for (int i = 0; i < 100000; i++)
+			//	{
+					fsm.Update(dt);
+			//	}
+			//	end = the_clock::now();			// Stop timing 
+			//	auto time_taken = duration_cast<milliseconds>(end - start).count();
+			//	std::cout <<"FSM  "<< (float)time_taken << "\n";
+			//	// Compute the difference between the two times in milliseconds
+			//	runTest = false;
+			//}
+
 		}
 		if (guardBT.isAlive() == true)			//Update guard and its bt only if guard is alive
 		{
 			guardBT.Update(dt, player.getPosition());
-			btState.Update(dt);
+		//	if (runTest2 == true)
+		//	{
+			//	start = the_clock::now();			// Start timing 
+			//	for (int i = 0; i < 100000; i++)
+			//	{
+					btState.Update(dt);
+				//}
+				//end = the_clock::now();			// Stop timing 
+				//auto time_taken = duration_cast<milliseconds>(end - start).count();
+				//std::cout <<"BT  "<< (float)time_taken << "\n";
+				//// Compute the difference between the two times in milliseconds
+				//runTest2 = false;
+		//	}
+
 		}
 		goal.Update(player.getPosition());		//Update goal
 	}

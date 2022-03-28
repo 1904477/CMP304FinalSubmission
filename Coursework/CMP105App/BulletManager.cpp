@@ -74,7 +74,7 @@ void BulletManager::DeathCheck()
 			{
 				bullets[i].setAlive(false);
 			}
-			if (distanceToPlayerLenght > 200)
+			if (distanceToPlayerLenght > 150)
 			{
 				bullets[i].setAlive(false);
 			}

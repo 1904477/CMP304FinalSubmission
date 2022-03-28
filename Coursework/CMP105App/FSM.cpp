@@ -14,7 +14,7 @@ FSM::~FSM()
 
 void FSM::Init() //Initializations
 {
-	current_state = Still;		//First guard state is still
+	current_state = Wander;		//First guard state is still
 	wanderStates = p1;			//First point where the guard will go to
 
 	wanderP1 = sf::Vector2f(window->getSize().x / 1.5, window->getSize().y / 12);		//First point to wander to
@@ -62,7 +62,7 @@ void FSM::UpdateChecks()
 	{
 		current_state = Attack;		
 	}
-	if ((distanceToPlayer.x < 70 && distanceToPlayer.y < 70) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //if player is close or if player is farther but making a noise (add noise boolean when player runs)
+	if ((distanceToPlayer.x < 70 && distanceToPlayer.y < 70) && distanceToPlayer.x > 0 && distanceToPlayer.y > 0) //player health decreas if too close
 	{
 		player->pHealth -= 0.05;
 	}
@@ -73,7 +73,7 @@ void FSM::UpdateChecks()
 			current_state = Suspicious;
 		}
 	}
-	if (guardFSM->health <= 0)		//Guard dies at 0 health
+	if (guardFSM->health == 0)		//Guard dies at 0 health
 	{
 		current_state = Die;
 	}
@@ -82,9 +82,21 @@ void FSM::UpdateChecks()
 
 void FSM::StillFunc()		//When guard is still, its speed is zero and  after three seconds, it starts wandering
 {
+	if (genRandomNumber == true)
+	{
+		int randomNumber = rand() % 101;		//Random number for random state 
+		if (randomNumber >= 50)
+		{
+			current_state = Still;
+		}
+		else
+			current_state = Wander;
+		genRandomNumber = false;
+	}
+
 	sf::Time time = clock.getElapsedTime();
 	guardFSM->speed = 0;
-	if (time.asSeconds() >= 3)
+	if (time.asSeconds() >= 5)
 	{
 		current_state = Wander;
 		clock.restart();
@@ -94,7 +106,7 @@ void FSM::StillFunc()		//When guard is still, its speed is zero and  after three
 void FSM::WanderFunc(float dt)
 {
 	sf::Time time = clock.getElapsedTime();
-	if (time.asSeconds() >= 4)		//Alternate wander and still, after 4 seconds in wandering, guard stands still
+	if (time.asSeconds() >= 8)		//Alternate wander and still, after 4 seconds in wandering, guard stands still
 	{
 		current_state = Still;
 		clock.restart();
@@ -126,14 +138,11 @@ void FSM::SuspiciousFunc(float dt)	//Suspicious function
 	{
 		clock.restart();
 		int randomNumber = rand() % 101;		//Random number for random state 
-		std::cout << randomNumber;
 		if (randomNumber > 50)
 			current_state = Still;
 		else
 			current_state = Wander;
 	}
-
-
 }
 
 void FSM::AttackFunc(float dt)		//When guard is attacking, it won't get back to the other states and attacks until it kills the player or dies.

@@ -12,7 +12,7 @@ public:
 	void Init();			//Initializer
 	void Update(float dt);		//Update func
 	void UpdateChecks();		//Update checks 
-	void StillFunc();			//Guard sti
+	void StillFunc();			//Guard still function
 	void WanderFunc(float dt);		//Wander function
 	void SuspiciousFunc(float dt);		//Suspicious function
 	void AttackFunc(float dt);			//Attack function
@@ -38,5 +38,7 @@ public:
 	sf::Vector2f wanderP1, wanderP2, wanderToOrigin;	//Target position variables
 
 	sf::Clock clock;
+	bool genRandomNumber = true;
+	int randomNumber;
 };
 

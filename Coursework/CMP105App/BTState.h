@@ -62,5 +62,7 @@ public:
 	sf::Clock clock;
 
 	bool inAttack;
+	bool genRandomNumber = true;
+	int randomNumber;
 };
 

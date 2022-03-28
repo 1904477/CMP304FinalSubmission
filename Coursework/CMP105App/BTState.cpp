@@ -8,7 +8,7 @@ BTState::BTState(sf::RenderWindow* hwnd,GuardBT* grdBt, Player* pl)
 	WanderLeaf("Patrolling"),
 	SuspiciousLeaf("Disturbance"),
 	AttackLeaf("Explore"),
-	StandTimer("timerInsert",3000),
+	StandTimer("timerInsert",5000),
 	SuspiciousTimer("timerInsert",9000),
 	WanderTimer("timerInsert",15000),
 	DieLeaf("Die")
@@ -37,8 +37,8 @@ void BTState::Init()
 	DieLeaf.setRunFunction(std::bind(&BTState::Die, this, std::placeholders::_1));
 
 	root.addChildNode(&guardBranch);		//Create structure of tree
-	guardBranch.addChildNode(&StandTimer);
 	guardBranch.addChildNode(&WanderTimer);
+	guardBranch.addChildNode(&StandTimer);
 	WanderTimer.addChildNode(&WanderLeaf);
 	StandTimer.addChildNode(&StandLeaf);
 	root.addChildNode(&SuspiciousTimer);
@@ -78,7 +78,6 @@ void BTState::Update(float dt)
 			BT::Blackboard::getInstance()->addNewValue("Noise", 1);		//Guard get suspicious, add noise value
 		}
 	}
-
 	BT::NodeStatus result = root.tick();			//Execute tree
 	if (result == BT::NodeStatus::NODE_SUCCESS)		//Reset tree if node is succesfull
 	{
@@ -119,7 +118,6 @@ void BTState::moveToOrigin()		//Guard gets back to origin position
 
 	if (distanceFromGuardToOrig.x < 50 && distanceFromGuardToOrig.y < 50)		//If guard is close to origin point,head to first point
 	{
-		std::cout << "guard reached first wander point\n";
 		wanderStates = p1;
 	}
 	guardRotation(wanderToOrigin);			//Calculate and apply rotation
@@ -164,7 +162,6 @@ void BTState::moveToPoint2()		//Guard moves to second point
 
 	if (distanceFromGuardToPoint2.x < 50 && distanceFromGuardToPoint2.y < 50)		//If guard is close to second point,head to origin point
 	{
-		std::cout << "guard reached first wander point\n";
 		wanderStates = orig;
 	}
 
@@ -192,12 +189,23 @@ BT::NodeStatus BTState::leafAttackFunction(BT::TreeNode* owner)		//Attack functi
 		return BT::NodeStatus::NODE_RUNNING;
 }
 
-
 BT::NodeStatus BTState::leafStandFunction(BT::TreeNode* owner)			//Function for stand leaf
 {
-	if (BT::Blackboard::getInstance()->getAndDeleteValue("Noise")|| BT::Blackboard::getInstance()->getAndDeleteValue("Attack") || BT::Blackboard::getInstance()->getAndDeleteValue("Die"))		//If guard is suspicious, attacking or dead
+	if (genRandomNumber == true)
+	{
+		int randomNumber = rand() % 101;		//Random number for random state 
+		if (randomNumber >= 50)
+		{
+			BT::Blackboard::getInstance()->addNewValue("Skip", 1);		//Guard get suspicious, add noise value
+		}
+		genRandomNumber = false;
+	}
+	if (BT::Blackboard::getInstance()->getAndDeleteValue("Noise")||
+		BT::Blackboard::getInstance()->getAndDeleteValue("Attack") 
+		|| BT::Blackboard::getInstance()->getAndDeleteValue("Die")
+		||BT::Blackboard::getInstance()->getAndDeleteValue("Skip"))		//If guard is suspicious, attacking or dead
 	{																																															//Skip this function
-		return BT::NodeStatus::NODE_FAILURE;
+		root.reset();
 	}
 	guardBt->speed = 0;		//When standing, speed is 0
 	return BT::NodeStatus::NODE_RUNNING;
@@ -220,7 +228,7 @@ BT::NodeStatus BTState::leafWanderFunction(BT::TreeNode* owner)
 		moveToOrigin();
 		break;
 	}
-
+	genRandomNumber = true;
 	return BT::NodeStatus::NODE_RUNNING;
 }
 

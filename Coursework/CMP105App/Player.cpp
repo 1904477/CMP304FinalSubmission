@@ -91,7 +91,7 @@ void Player::Controls(float dt)
 	if (input->isMouseLDown())		//Shooting on left mouse pressed
 	{
 		time = clock.getElapsedTime();
-		if (time.asSeconds() > 0.2)		//cooldown of o.2 seconds
+		if (time.asSeconds() > 0.3)		//cooldown of o.2 seconds
 		{
 			bulletDir.x = input->getMouseX();		//Get mouse position
 			bulletDir.y = input->getMouseY();
